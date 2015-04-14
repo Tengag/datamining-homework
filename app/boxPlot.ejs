@@ -1,0 +1,156 @@
+
+<!-- BOX CSS -->
+<style type="text/css">
+
+.box line,
+.box rect,
+.box circle {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.box .center {
+  stroke-dasharray: 3,3;
+}
+
+.box .outlier {
+  fill: none;
+  stroke: #ccc;
+}
+
+.checkbox-grid li {
+    display: block;
+    float: left;
+    width: 10%;
+}
+</style>
+
+
+<div class="container boxplot" style="display:none;">
+<!-- Js -->
+<script src="../js/box.js"></script>
+<script>
+
+var margin = {top: 10, right: 50, bottom: 20, left: 50},
+    width = 120 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var min = Infinity,
+    max = -Infinity;
+
+var chart = d3.box()
+    .whiskers(iqr(1.5))
+    .width(width)
+    .height(height);
+var data = [];
+d3.json(course, function(error, json) {
+  for(var j = 0; j < json.length ; j++){
+    var keys = Object.keys(json[j]);
+    for(var i = 0; i < keys.length ; i++) {
+      var k = keys[i],
+          r = j + 1,
+          s = Math.floor(json[j][k]),
+          d = data[k];
+      if (!d) d = data[k] = [s];
+      else d.push(s);
+      if (s > max) max = s;
+      if (s < min) min = s;
+    }
+  }
+  chart.domain(d3.extent(data["G3"]));
+  var result = [];
+  result.push(data["G3"]);
+
+  // var svg = d3.select(".boxplot").selectAll("svg")
+  //     .data(result)
+  //   .enter().append("svg")
+  //     .attr("class", "box")
+  //     .attr("width", width + margin.left + margin.right)
+  //     .attr("height", height + margin.bottom + margin.top)
+  //   .append("g")
+  //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+  //     .call(chart);
+
+  $(".dropdown-menu li a").click(function(ev){
+    var selText = $(this).text();
+    $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+    chart.domain(d3.extent(data[ev.target.innerHTML]));
+    svg.datum(data[ev.target.innerHTML]).call(chart.duration(1000));
+  });
+
+  $(".checkbox-inline").change(function() {
+    min = Infinity;
+    max = -Infinity;
+
+    var newDataSets = [];
+    $('input[type=checkbox]').each(function () {
+        if(this.checked){
+          newDataSets.push(data[this.value]);
+          var minMax = d3.extent(data[this.value]);
+          if(minMax[0] < min) min = minMax[0];
+          if(minMax[1] > max) max = minMax[1];
+        }
+    });
+    $(".boxplot svg").remove();
+    chart.domain([min,max]);
+    var svg = d3.select(".boxplot").selectAll("svg")
+        .data(newDataSets)
+      .enter().append("svg")
+        .attr("class", "box")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.bottom + margin.top)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(chart);
+      // .append("text")
+      //   .attr("x", width - 24)
+      //   .attr("y", 9)
+      //   .attr("dy", ".35em")
+      //   .style("text-anchor", "end")
+      //   .text(function(d) {
+      //       return d;
+      //   })
+  });
+});
+
+// Returns a function to compute the interquartile range.
+function iqr(k) {
+  return function(d, i) {
+    var q1 = d.quartiles[0],
+        q3 = d.quartiles[2],
+        iqr = (q3 - q1) * k,
+        i = -1,
+        j = d.length;
+    while (d[++i] < q1 - iqr);
+    while (d[--j] > q3 + iqr);
+    return [i, j];
+  };
+}
+
+</script>
+
+<!-- Search box Start -->
+<form>
+  <div class="carousel-search hidden-phone">
+    <div class="btn-group">
+      <!-- <a class="btn dropdown-toggle btn-select" data-toggle="dropdown" href="#">G3<span class="caret"></span></a> -->
+      <!-- <ul class="dropdown-menu">
+        <% for(var i=0; i<columns.length; i++) {%>
+           <li role="presentation"><a role="boxKey" tabindex=<%i%> href="#"><%= columns[i] %></a></li>
+        <% } %>
+      </ul> -->
+      <ul class="checkbox-grid">
+        <% for(var i=0; i<columns.length; i++) {%>
+          <li><label class="checkbox-inline">
+            <input type="checkbox" id="inlineCheckbox" value="<%= columns[i] %>"><%= columns[i] %></label></li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</form>
+<br>
+<br>
+<br>
+</div>
+

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style type="text/css">
+
+
+.dropdown-menu{
+	max-height: 400px;
+	overflow-y: scroll;
+}
+
+</style>
+
+<head>
+	<meta charset="UTF-8">
+	<script src="../bower_components/d3/d3.min.js"></script>
+	<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+	<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<title>{ Homework }</title>
+</head>
+
+<body>
+
+<script type="text/javascript">
+
+	var selectNavItem = function(slecetedItem){
+		$(".container").hide();
+		$("."+slecetedItem.toLowerCase()).show();
+	}
+
+	$(document).ready(function() {
+		$('.nav a').click(function(ev){
+			selectNavItem(ev.target.innerHTML);
+
+		});
+
+		$('.navbar-nav li').click(function () {
+		  $(this).siblings().removeClass('active');
+		  $(this).addClass('active');
+		});
+	});
+	
+	var course = "/por";
+	// var course = "student-mat";
+
+</script>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#"></a>
+    </div>
+    <div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">BoxPlot</a></li>
+        <li><a href="#">ScatterPlot</a></li> 
+        <li><a href="#">ScatterPlotMatrix</a></li> 
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<% include home.ejs %>
+<% include matrix.ejs %>
+<% include scatter.ejs %>
+<% include boxPlot.ejs %>
+
+
+</body>
+</html>

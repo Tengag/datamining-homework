@@ -1,0 +1,158 @@
+<div class="container home">
+
+<h1>{ Data Visualization }</h1>
+<h3><a href="http://archive.ics.uci.edu/ml/datasets/Student+Performance">UCI Machine Learning Repo - Student Performance Data Set</a></h3>
+
+<pre>
+  資料集及包含兩組葡萄牙中學，其中包含學生成績以及其他資訊，此資料及包含兩組：數學與葡萄牙文課程，
+  由於葡萄牙文課程資料比數學課程多，所以先使用葡萄牙文課程當作練習。
+</pre>
+
+<h4>資料欄位資訊</h4>
+
+<pre>
+  
+  Attribute Description (Domain):
+  ======================================================================
+  sex - student’s sex (binary: female or male)
+  age - student’s age (numeric: from 15 to 22)
+  school -  student’s school (binary: Gabriel Pereira or Mousinho da Silveira)
+  address - student’s home address type (binary: urban or rural)
+  Pstatus - parent’s cohabitation status (binary: living together or apart)
+  Medu - mother’s education (numeric: from 0 to 4a)
+  Mjob - mother’s job (nominalb)
+  Fedu - father’s education (numeric: from 0 to 4a)
+  Fjob - father’s job (nominalb)
+  guardian - student’s guardian (nominal: mother, father or other)
+  famsize - family size (binary: ≤ 3 or > 3)
+  famrel - quality of family relationships (numeric: from 1 – very bad to 5 – excellent)
+  reason - reason to choose this school (nominal: close to home, school reputation, course preference or other)
+  traveltime - home to school travel time (numeric: 1 – < 15 min., 2 – 15 to 30 min., 3 – 30 min. to 1 houror 4 – > 1 hour).
+  studytime - weekly study time (numeric: 1 – < 2 hours, 2 – 2 to 5 hours, 3 – 5 to 10 hours or 4 – > 10 hours)
+  failures - number of past class failures (numeric: n if 1 ≤ n < 3, else 4)
+  schoolsup - extra educational school support (binary: yes or no)
+  famsup - family educational support (binary: yes or no)
+  activities - extra-curricular activities (binary: yes or no)
+  paidclass - extra paid classes (binary: yes or no)
+  internet - Internet access at home (binary: yes or no)
+  nursery - attended nursery school (binary: yes or no)
+  higher - wants to take higher education (binary: yes or no)
+  romantic - with a romantic relationship (binary: yes or no)
+  freetime - free time after school (numeric: from 1 – very low to 5 – very high)
+  goout - going out with friends (numeric: from 1 – very low to 5 – very high)
+  Walc - weekend alcohol consumption (numeric: from 1 – very low to 5 – very high)
+  Dalc - workday alcohol consumption (numeric: from 1 – very low to 5 – very high)
+  health - current health status (numeric: from 1 – very bad to 5 – very good)
+  absences - number of school absences (numeric: from 0 to 93)
+  ======================================================================
+
+  G1 - first period grade (numeric: from 0 to 20)
+  G2 - second period grade (numeric: from 0 to 20)
+  G3 - final grade (numeric: from 0 to 20)
+  ======================================================================
+  
+  a 0 – none, 1 – primary education (4th grade), 2 – 5th to 9th grade, 3 – secondary education or 4 – higher education.
+  b teacher, health care related, civil services (e.g. administrative or police), at home or other.
+</pre>
+
+<h4>處理資料</h4>
+
+<pre>
+  Five-level classification system (分數):
+
+    16-20 A
+    14-15 B
+    12-13 C
+    10-11 D
+    0-9   F
+
+  averageScore:
+  (G3 + G2 + G1) / 3
+
+  badAssScore:
+  (Walc * 1.5 + Dalc + absences) / 3.5
+
+  familyScore:
+  (Medu + Fedu + famrel) / 3
+  假如是 guardian 加權0.5
+
+</pre>
+
+<h4>資料分佈 (Generated using R summery)</h4>
+
+<pre>
+  school   sex          age      address famsize   Pstatus Medu    Fedu
+  ======================================================================
+  GP:423   F:383   17     :179   R:197   GT3:457   A: 80   0:  6   0:  7
+  MS:226   M:266   16     :177   U:452   LE3:192   T:569   1:143   1:174
+                   18     :140                             2:186   2:209
+                   15     :112                             3:139   3:131
+                   19     : 32                             4:175   4:128
+                   20     :  6
+                   (Other):  3
+
+
+  Mjob           Fjob           reason           guardian     traveltime
+  ======================================================================
+  at_home :135   at_home : 42   course    :285   father:153   1:366
+  health  : 48   health  : 23   home      :149   mother:455   2:213
+  other   :258   other   :367   other     : 72   other : 41   3: 54
+  services:136   services:181   reputation:143                4: 16
+  teacher : 72   teacher : 36
+
+
+  studytime failures schoolsup   famsup      fatherd     activities  nursery
+  ============================================================================
+  1:212     0:549    FALSE:581   FALSE:251   FALSE:610   FALSE:334   FALSE:128
+  2:305     1: 70    TRUE : 68   TRUE :398   TRUE : 39   TRUE :315   TRUE :521
+  3: 97     2: 16
+  4: 35     3: 14
+
+
+  higher      internet    romantic   famrel  freetime goout   Dalc    Walc
+  =========================================================================
+  FALSE: 69   FALSE:151   FALSE:410  1: 22   1: 45    1: 48   1:451   1:247
+  TRUE :580   TRUE :498   TRUE :239  2: 29   2:107    2:145   2:121   2:150
+                                     3:101   3:251    3:205   3: 43   3:120
+                                     4:317   4:178    4:141   4: 17   4: 87
+                                     5:180   5: 68    5:110   5: 17   5: 45
+
+
+  health  absences      G1            G2            G3
+  =============================================================
+  1: 90    0      :244   10     : 95   11     :103   11     :104
+  2: 78    2      :110   11     : 91   12     : 86   10     : 97
+  3:124    4      : 93   12     : 82   10     : 83   13     : 82
+  4:108    6      : 49   13     : 72   13     : 80   12     : 72
+  5:249    8      : 42   14     : 71    9     : 72   14     : 63
+          10      : 21    9     : 65   14     : 54   15     : 49
+           (Other): 90   (Other):173   (Other):171   (Other):182
+
+
+  averageScore           badAssScore             familyScore
+  ===================================================================
+  10              : 42   0.714285714285714:101   2.57142857142857: 67
+  12.3333333333333: 38   1.85714285714286 : 58   4               : 58
+  10.6666666666667: 37   1.28571428571429 : 47   1.85714285714286: 49
+  13              : 33   1.14285714285714 : 42   2.28571428571429: 46
+  11              : 31   2.28571428571429 : 30   2.85714285714286: 44
+  10.3333333333333: 29   1.57142857142857 : 27   3.28571428571429: 44
+  (Other)         :439   (Other)          :344   (Other)         :341
+
+
+</pre>
+
+<h4>工具</h4>
+
+<pre>
+  1. D3.js - 資料視覺化
+  2. Node.js - 資料處理以及 Server backend
+  3. R
+</pre>
+
+
+<a href="http://www3.dsi.uminho.pt/pcortez/student.pdf">相關論文</a> 
+</div>
+
+
+
